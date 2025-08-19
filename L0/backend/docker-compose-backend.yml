@@ -1,0 +1,17 @@
+services:
+  order_service:
+    container_name: order_service
+    ports: 
+      - "8080:8080"
+    build:
+      context: ./order_service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    networks: [order_backend]
+
+networks:
+  order_backend:
+    driver: bridge
+    external: true
