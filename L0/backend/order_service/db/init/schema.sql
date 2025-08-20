@@ -9,7 +9,7 @@ CREATE TABLE orders (
   customer_id      UUID NOT NULL,
   delivery_service text,
   shardkey         text NOT NULL,
-  sm_id            integer NOT NULL,
+  sm_id            integer NOT NULL CHECK (sm_id > 0),
   date_created     timestamptz NOT NULL,
   oof_shard        text NOT NULL
 );
@@ -18,12 +18,13 @@ CREATE TABLE deliveries (
   id        UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   order_uid UUID NOT NULL REFERENCES orders(order_uid) ON DELETE CASCADE,
   name      text NOT NULL,
-  phone     text NOT NULL,
+  phone     text,
   zip       text,
-  city      text NOT NULL,
+  city      text,
   address   text NOT NULL,
   region    text,
-  email     text NOT NULL
+  email     text,
+  CONSTRAINT contact_required CHECK (phone IS NOT NULL OR email IS NOT NULL)
 );
 
 CREATE TABLE payments (
@@ -50,10 +51,10 @@ CREATE TABLE items (
   rid          UUID NOT NULL,
   name         text NOT NULL,
   sale         integer NOT NULL CHECK (sale >= 0),
-  size         text NOT NULL,
+  size         text,
   total_price  integer NOT NULL CHECK (total_price >= 0),
   nm_id        bigint NOT NULL,
-  brand        text NOT NULL,
-  status       integer NOT NULL,
+  brand        text,
+  status       integer CHECK (status >= 0),
   CONSTRAINT unique_items_in_order UNIQUE (order_uid, chrt_id)
 );

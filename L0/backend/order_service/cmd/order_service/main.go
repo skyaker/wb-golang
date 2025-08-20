@@ -3,11 +3,19 @@ package main
 import (
 	"net/http"
 
+	order_kafka "order_info/internal/kafka"
+	rep "order_info/internal/repository"
+
 	"github.com/go-chi/chi"
 	"github.com/rs/zerolog/log"
 )
 
 func main() {
+	db := rep.GetDbConnection()
+	defer db.Close()
+
+	go order_kafka.RunKafkaListener(db)
+
 	r := chi.NewRouter()
 
 	log.Info().Msg("Order server is running")
@@ -15,7 +23,6 @@ func main() {
 	if err != nil {
 		log.Fatal().
 			Err(err).
-			Str("service", "auth service").
 			Msg("Server start failed")
 	}
 }
