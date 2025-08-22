@@ -55,7 +55,7 @@ func RunKafkaListener(db *sql.DB) {
 				log.Error().Err(err).Msg("failed to save order")
 				continue
 			}
-			log.Info().Msg("order created")
+			log.Info().Msg("Order created")
 
 		default:
 			log.Error().Msg("topic undefined")

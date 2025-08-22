@@ -5,6 +5,7 @@ go 1.24.1
 require (
 	github.com/go-chi/chi v1.5.5
 	github.com/go-playground/validator/v10 v10.27.0
+	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.34.0
 	github.com/segmentio/kafka-go v0.4.48

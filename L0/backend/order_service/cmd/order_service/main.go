@@ -18,6 +18,8 @@ func main() {
 
 	r := chi.NewRouter()
 
+	// r.Get("/orders/{order_uid}", handlers.GetOrder)
+
 	log.Info().Msg("Order server is running")
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
