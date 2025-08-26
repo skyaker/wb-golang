@@ -9,9 +9,13 @@ services:
     env_file:
       - .env
     restart: always
-    networks: [order_backend]
+    networks: [order_backend, order_frontend]
 
 networks:
   order_backend:
+    driver: bridge
+    external: true
+
+  order_frontend:
     driver: bridge
     external: true

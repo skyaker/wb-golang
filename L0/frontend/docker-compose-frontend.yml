@@ -1,0 +1,21 @@
+services:
+  order_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: order_frontend
+    ports:
+      - "8501:8501"
+    restart: always
+    networks:
+      - order_frontend
+      - order_backend
+
+networks:
+  order_frontend:
+    driver: bridge
+    external: true
+
+  order_backend:
+    driver: bridge
+    external: true
