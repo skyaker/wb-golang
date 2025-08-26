@@ -11,7 +11,11 @@ import (
 )
 
 func WriteOrder(db *sql.DB, order *models.Order) error {
-	order.OrderUID = uuid.New().String()
+	_, err := uuid.Parse(order.OrderUID)
+	if err != nil {
+		log.Info().Msg("Order UID parse error")
+		order.OrderUID = uuid.New().String()
+	}
 
 	if err := insertOrderInfo(db, order); err != nil {
 		log.Error().
