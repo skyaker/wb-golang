@@ -21,6 +21,13 @@ type Order struct {
 	OOFShard     string    `json:"oof_shard"          validate:"required"`
 }
 
+type AggregatedOrder struct {
+	Order    Order    `json:"order"`
+	Delivery Delivery `json:"delivery"`
+	Payment  Payment  `json:"payment"`
+	Items    []Item   `json:"items"`
+}
+
 type Delivery struct {
 	DeliveryUID string
 	OrderUID    string

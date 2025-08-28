@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	cache "order_info/internal/cache"
 	models "order_info/internal/models"
 	rep "order_info/internal/repository"
 
@@ -46,15 +47,22 @@ func RunKafkaListener(db *sql.DB) {
 			}
 			log.Info().Msg("add-order message received")
 
+			// Validate all requirements written in models
 			if err := validateOrder(&order); err != nil {
 				log.Warn().Err(err).Msg("validation failed")
 				continue
 			}
 
+			// Insert received info into db
 			if err := rep.WriteOrder(db, &order); err != nil {
-				log.Error().Err(err).Msg("failed to save order")
+				log.Error().Err(err).Msg("failed to save order to db")
 				continue
 			}
+
+			if err := cache.SetOrder(context.Background(), order.OrderUID, m.Value); err != nil {
+				log.Error().Err(err).Msg("failed to save order to cache")
+			}
+
 			log.Info().Msg("Order created")
 
 		default:

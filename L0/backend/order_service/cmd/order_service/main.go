@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"order_info/internal/cache"
 
 	handlers "order_info/internal/handlers"
 	order_kafka "order_info/internal/kafka"
@@ -14,6 +15,8 @@ import (
 func main() {
 	db := rep.GetDbConnection()
 	defer db.Close()
+
+	cache.Init()
 
 	go order_kafka.RunKafkaListener(db)
 
