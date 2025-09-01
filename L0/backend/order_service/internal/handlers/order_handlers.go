@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"net/http"
 	cache "order_info/internal/cache"
 	models "order_info/internal/models"
 	rep "order_info/internal/repository"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
@@ -30,17 +30,11 @@ func GetOrder(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		cacheStart := time.Now()
 		ok, err := cache.GetOrder(orderUID.String(), &agg)
 		if err != nil {
-			log.Info().Err(err).Msg("failed to get order from cache")
+			log.Warn().Err(err).Msg("failed to get order from cache")
 		}
 		if ok {
-			cacheEnd := time.Now()
-			log.Info().
-				Str("order_uid", orderUID.String()).
-				Dur("time", cacheEnd.Sub(cacheStart)).
-				Msg("get order from cache")
 			w.Header().Set("Content-Type", "application/json")
 			if err := json.NewEncoder(w).Encode(agg); err != nil {
 				log.Error().Err(err).Msg("failed to encode response")
@@ -54,7 +48,6 @@ func GetOrder(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		readStart := time.Now()
 		agg, httpErr = rep.ReadOrder(db, orderUID)
 		if httpErr.Error != nil {
 			log.Error().Err(httpErr.Error).Msg(httpErr.Msg)
@@ -65,11 +58,22 @@ func GetOrder(db *sql.DB) http.HandlerFunc {
 			)
 			return
 		}
-		readEnd := time.Now()
-		log.Info().
-			Str("order_uid", orderUID.String()).
-			Dur("time", readEnd.Sub(readStart)).
-			Msg("read order from db")
+
+		cacheOrder := agg.Order
+		cacheOrder.Delivery = &agg.Delivery
+		cacheOrder.Payment = &agg.Payment
+		cacheOrder.Items = agg.Items
+
+		cacheData, err := json.Marshal(cacheOrder)
+		if err != nil {
+			log.Error().Err(err).Msg("failed to marshal order info")
+		}
+
+		err = cache.SetOrder(context.Background(), orderUID.String(), cacheData)
+		if err != nil {
+			key := "order:" + orderUID.String()
+			log.Error().Err(err).Str("key", key).Msg("failed to set order in cache")
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(agg); err != nil {

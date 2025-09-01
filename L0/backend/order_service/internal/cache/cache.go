@@ -32,7 +32,6 @@ func Init() {
 func SetOrder(ctx context.Context, orderUID string, data []byte) error {
 	key := "order:" + orderUID
 	if err := rdb.Set(ctx, key, data, ttl).Err(); err != nil {
-		log.Error().Err(err).Str("key", key).Msg("failed to set order in cache")
 		return err
 	}
 	return nil
