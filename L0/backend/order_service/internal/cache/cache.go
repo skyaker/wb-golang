@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"encoding/json"
+	"order_info/internal/models"
 	"os"
 	"time"
 
@@ -37,16 +38,24 @@ func SetOrder(ctx context.Context, orderUID string, data []byte) error {
 	return nil
 }
 
-func GetOrder(orderUID string, target any) (bool, error) {
+func GetOrder(orderUID string, target *models.AggregatedOrder) (bool, error) {
 	val, err := rdb.Get(ctx, "order:"+orderUID).Result()
+	var order models.Order
 	if err == redis.Nil {
 		return false, nil // No order info in cache
 	}
 	if err != nil {
 		return false, err
 	}
-	if err := json.Unmarshal([]byte(val), target); err != nil {
+	if err := json.Unmarshal([]byte(val), &order); err != nil {
 		return false, err
 	}
+	*target = models.AggregatedOrder{
+		Order:    order,
+		Delivery: *order.Delivery,
+		Payment:  *order.Payment,
+		Items:    order.Items,
+	}
+
 	return true, nil
 }

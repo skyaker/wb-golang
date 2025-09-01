@@ -29,7 +29,7 @@ up-all: up-databases up-kafka up-backend
 # -------------------------------------------NETWORK-------------------------------------------
 
 .PHONY: network-all
-network-all: rm-network create-network
+network-all: hard-rm-network create-network
 
 .PHONY: create-network
 create-network:
