@@ -30,6 +30,12 @@ func GetOrder(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		if !rep.CheckOrderExistence(db, orderUID.String()) {
+			log.Error().Msg("order not found")
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
 		ok, err := cache.GetOrder(orderUID.String(), &agg)
 		if err != nil {
 			log.Warn().Err(err).Msg("failed to get order from cache")

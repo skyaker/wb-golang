@@ -47,3 +47,77 @@
    "date_created": "2021-11-26T06:22:19Z",
    "oof_shard": "1"
 }
+
+[
+  {
+    "order_uid":"11111111-1111-1111-1111-111111111111",
+    "track_number":"TRACK111",
+    "entry":"WEB",
+    "locale":"ru",
+    "customer_id":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "shardkey":"shard1",
+    "sm_id":1,
+    "date_created":"2025-08-20T10:00:00Z",
+    "oof_shard":"1",
+    "delivery":{"name":"Ivan Ivanov","phone":"+79998887766","city":"Moscow","address":"Red Square 1","email":"ivan@example.com"},
+    "payment":{"transaction":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb","currency":"RUB","provider":"card","amount":1200,"payment_dt":1690000001,"delivery_cost":200,"goods_total":1000,"custom_fee":0},
+    "items":[{"chrt_id":1001,"track_number":"TRACK111","price":1000,"rid":"cccccccc-cccc-cccc-cccc-cccccccccccc","name":"T-shirt","sale":0,"size":"M","total_price":1000,"nm_id":5001,"brand":"Nike","status":1}]
+  },
+  {
+    "order_uid":"22222222-2222-2222-2222-222222222222",
+    "track_number":"TRACK222",
+    "entry":"WBIL",
+    "locale":"en",
+    "customer_id":"dddddddd-dddd-dddd-dddd-dddddddddddd",
+    "shardkey":"shard2",
+    "sm_id":2,
+    "date_created":"2025-08-21T11:00:00Z",
+    "oof_shard":"2",
+    "delivery":{"name":"Petr Petrov","phone":"+78120000000","city":"Saint Petersburg","address":"Nevsky Prospect 10","email":"petr@example.com"},
+    "payment":{"transaction":"eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee","currency":"USD","provider":"sbp","amount":2000,"payment_dt":1690000002,"delivery_cost":300,"goods_total":1700,"custom_fee":0},
+    "items":[{"chrt_id":2002,"track_number":"TRACK222","price":1700,"rid":"ffffffff-ffff-ffff-ffff-ffffffffffff","name":"Shoes","sale":0,"size":"42","total_price":1700,"nm_id":6002,"brand":"Adidas","status":1}]
+  },
+  {
+    "order_uid":"33333333-3333-3333-3333-333333333333",
+    "track_number":"TRACK333",
+    "entry":"WEB",
+    "locale":"ru",
+    "customer_id":"11111111-2222-3333-4444-555555555555",
+    "shardkey":"shard3",
+    "sm_id":3,
+    "date_created":"2025-08-22T12:00:00Z",
+    "oof_shard":"3",
+    "delivery":{"name":"Anna Smirnova","phone":"+78451234567","city":"Kazan","address":"Bauman St 5","email":"anna@example.com"},
+    "payment":{"transaction":"66666666-7777-8888-9999-aaaaaaaaaaaa","currency":"EUR","provider":"paypal","amount":1500,"payment_dt":1690000003,"delivery_cost":250,"goods_total":1250,"custom_fee":0},
+    "items":[{"chrt_id":3003,"track_number":"TRACK333","price":1250,"rid":"bbbbbbbb-cccc-dddd-eeee-ffffffffffff","name":"Bag","sale":0,"size":"L","total_price":1250,"nm_id":7003,"brand":"Gucci","status":1}]
+  },
+  {
+    "order_uid":"44444444-4444-4444-4444-444444444444",
+    "track_number":"TRACK444",
+    "entry":"WBIL",
+    "locale":"ru",
+    "customer_id":"66666666-6666-6666-6666-666666666666",
+    "shardkey":"shard4",
+    "sm_id":4,
+    "date_created":"2025-08-23T13:00:00Z",
+    "oof_shard":"4",
+    "delivery":{"name":"Sergey Sidorov","phone":"+73837776655","city":"Novosibirsk","address":"Lenina 50","email":"sergey@example.com"},
+    "payment":{"transaction":"77777777-7777-7777-7777-777777777777","currency":"RUB","provider":"yandex","amount":500,"payment_dt":1690000004,"delivery_cost":100,"goods_total":400,"custom_fee":0},
+    "items":[{"chrt_id":4004,"track_number":"TRACK444","price":400,"rid":"99999999-aaaa-bbbb-cccc-dddddddddddd","name":"Hat","sale":0,"size":"L","total_price":400,"nm_id":8004,"brand":"Puma","status":1}]
+  },
+  {
+    "order_uid":"55555555-5555-5555-5555-555555555555",
+    "track_number":"TRACK555",
+    "entry":"WEB",
+    "locale":"en",
+    "customer_id":"77777777-8888-9999-aaaa-bbbbbbbbbbbb",
+    "shardkey":"shard5",
+    "sm_id":5,
+    "date_created":"2025-08-24T14:00:00Z",
+    "oof_shard":"5",
+    "delivery":{"name":"Elena Volkova","phone":"+73432223344","city":"Yekaterinburg","address":"Malysheva 20","email":"elena@example.com"},
+    "payment":{"transaction":"88888888-8888-8888-8888-888888888888","currency":"USD","provider":"qiwi","amount":3000,"payment_dt":1690000005,"delivery_cost":500,"goods_total":2500,"custom_fee":0},
+    "items":[{"chrt_id":5005,"track_number":"TRACK555","price":2500,"rid":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee","name":"Watch","sale":0,"size":"M","total_price":2500,"nm_id":9005,"brand":"Casio","status":1}]
+  }
+]
+

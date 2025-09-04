@@ -17,6 +17,7 @@ func main() {
 	defer db.Close()
 
 	cache.Init()
+	cache.CacheWarmUp(db)
 
 	go order_kafka.RunKafkaListener(db)
 

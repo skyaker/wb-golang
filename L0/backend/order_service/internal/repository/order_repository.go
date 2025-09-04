@@ -264,6 +264,8 @@ func ReadOrder(db *sql.DB, orderUID uuid.UUID) (models.AggregatedOrder, HttpErro
 
 func getOrderInfo(db *sql.DB, orderUID uuid.UUID) (models.Order, error) {
 	var orderInfo models.Order
+	var internalSig sql.NullString
+	var deliveryServ sql.NullString
 
 	query := `SELECT * FROM orders WHERE order_uid = $1`
 	rows, err := db.Query(query, orderUID)
@@ -279,9 +281,9 @@ func getOrderInfo(db *sql.DB, orderUID uuid.UUID) (models.Order, error) {
 			&orderInfo.TrackNumber,
 			&orderInfo.Entry,
 			&orderInfo.Locale,
-			&orderInfo.InternalSig,
+			&internalSig,
 			&orderInfo.CustomerID,
-			&orderInfo.DeliveryServ,
+			&deliveryServ,
 			&orderInfo.ShardKey,
 			&orderInfo.SMID,
 			&orderInfo.DateCreated,
@@ -289,6 +291,13 @@ func getOrderInfo(db *sql.DB, orderUID uuid.UUID) (models.Order, error) {
 		)
 		if err != nil {
 			return models.Order{}, err
+		}
+
+		if internalSig.Valid {
+			orderInfo.InternalSig = internalSig.String
+		}
+		if deliveryServ.Valid {
+			orderInfo.DeliveryServ = deliveryServ.String
 		}
 	}
 
@@ -301,6 +310,9 @@ func getOrderInfo(db *sql.DB, orderUID uuid.UUID) (models.Order, error) {
 
 func getDeliveryInfo(db *sql.DB, orderUID uuid.UUID) (models.Delivery, error) {
 	var deliveryInfo models.Delivery
+	var zip sql.NullString
+	var region sql.NullString
+	var email sql.NullString
 
 	query := `SELECT name, phone, zip, city, address, region, email 
 						FROM deliveries 
@@ -317,14 +329,24 @@ func getDeliveryInfo(db *sql.DB, orderUID uuid.UUID) (models.Delivery, error) {
 		err := rows.Scan(
 			&deliveryInfo.Name,
 			&deliveryInfo.Phone,
-			&deliveryInfo.Zip,
+			&zip,
 			&deliveryInfo.City,
 			&deliveryInfo.Address,
-			&deliveryInfo.Region,
-			&deliveryInfo.Email,
+			&region,
+			&email,
 		)
 		if err != nil {
 			return models.Delivery{}, err
+		}
+
+		if zip.Valid {
+			deliveryInfo.Zip = zip.String
+		}
+		if region.Valid {
+			deliveryInfo.Region = region.String
+		}
+		if email.Valid {
+			deliveryInfo.Email = email.String
 		}
 	}
 
@@ -337,6 +359,7 @@ func getDeliveryInfo(db *sql.DB, orderUID uuid.UUID) (models.Delivery, error) {
 
 func getPaymentInfo(db *sql.DB, orderUID uuid.UUID) (models.Payment, error) {
 	var paymentInfo models.Payment
+	var bank sql.NullString
 
 	query := `SELECT transaction, request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee 
 						FROM payments 
@@ -360,7 +383,7 @@ func getPaymentInfo(db *sql.DB, orderUID uuid.UUID) (models.Payment, error) {
 			&paymentInfo.Provider,
 			&paymentInfo.Amount,
 			&paymentInfo.PaymentDT,
-			&paymentInfo.Bank,
+			&bank,
 			&paymentInfo.DeliveryCost,
 			&paymentInfo.GoodsTotal,
 			&paymentInfo.CustomFee,
@@ -371,6 +394,9 @@ func getPaymentInfo(db *sql.DB, orderUID uuid.UUID) (models.Payment, error) {
 
 		if reqID.Valid {
 			paymentInfo.RequestID = reqID.String
+		}
+		if bank.Valid {
+			paymentInfo.Bank = bank.String
 		}
 	}
 
@@ -421,4 +447,16 @@ func getItemInfo(db *sql.DB, orderUID uuid.UUID) ([]models.Item, error) {
 	}
 
 	return itemsInfo, nil
+}
+
+func CheckOrderExistence(db *sql.DB, orderId string) bool {
+	query := "SELECT EXISTS(SELECT 1 FROM orders WHERE order_uid = $1)"
+	row := db.QueryRow(query, orderId)
+	var exists bool
+	err := row.Scan(&exists)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to check order existence")
+		return false
+	}
+	return exists
 }
